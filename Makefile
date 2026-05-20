@@ -69,7 +69,7 @@ help:
 	@echo "  make superuser           - manage.py createsuperuser [django]"
 	@echo "  make collectstatic       - manage.py collectstatic --noinput [django]"
 	@echo "  make loaddata FIXTURE=x  - manage.py loaddata <FIXTURE> [django]"
-	@echo "  make dumpdata APP=x      - manage.py dumpdata <APP> > <APP>.json"
+	@echo "  make dumpdata APP=x      - manage.py dumpdata <APP> > <APP>.json [django reads DB; file owned by you]"
 	@echo "  make shell               - manage.py shell [django]"
 	@echo "  make serve               - manage.py runserver $(HOST):$(PORT) [django] (dev only; gunicorn owns :8000)"
 	@echo "  make restart             - systemctl restart $(SERVICE) (load code changes) [sudo]"
@@ -130,9 +130,12 @@ makemigrations: check-venv
 	@sleep 2
 	$(MANAGE) makemigrations
 
+# DB is mode 640 django:django, so reading it needs the django account. The
+# '>' redirect is run by your (kevin) shell, so the output file lands in your
+# cwd owned by you; only the dump itself elevates.
 dumpdata: check-venv
 	@if [ -z "$(APP)" ]; then echo "Usage: make dumpdata APP=<app_name> [OUT=path.json]"; exit 1; fi
-	$(MANAGE) dumpdata $(APP) --indent 2 > $(if $(OUT),$(OUT),$(APP).json)
+	$(MANAGE_DJ) dumpdata $(APP) --indent 2 > $(if $(OUT),$(OUT),$(APP).json)
 
 # ---- Django: writes django-owned data (elevate to the service account) -----
 migrate: check-venv
