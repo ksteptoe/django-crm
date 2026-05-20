@@ -35,6 +35,8 @@ nav:
     - Operator and Sales Manager Roles: operator_and_sales_manager_roles.md
     - Sales Manager's Guide: guide_for_sales_manager.md
     - CRM Administrator's Guide: guide_for_crm_administrator.md
+  - Developer reference:
+    - Architecture & internals: dev_architecture_guide.md
 
 theme:
   name: readthedocs
