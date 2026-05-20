@@ -313,3 +313,9 @@ if TESTING:
     SECURE_SSL_REDIRECT = False
     LANGUAGE_CODE = 'en'
     LANGUAGES = [('en', ''), ('uk', '')]
+
+# Host-specific overrides (gitignored)
+try:
+    from .local_settings import *  # NOQA
+except ImportError:
+    pass
